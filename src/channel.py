@@ -8,13 +8,7 @@ import isodate
 
 
 api_key: str = os.getenv('API_KEY')
-#
-# youtube = build('youtube', 'v3', developerKey=api_key)
 
-
-# channel_id = 'UC-OVMPlMA3-YCIeg4z5z23A'  # MoscowPython
-# channel = youtube.channels().list(id=channel_id, part='snippet,statistics').execute()
-# print(channel)
 
 class Channel:
     """Класс для ютуб-канала"""
@@ -26,35 +20,39 @@ class Channel:
         youtube = build('youtube', 'v3', developerKey=api_key)
         channel = youtube.channels().list(id=self.__channel_id, part='snippet,statistics').execute()
         self.title = channel['items'][0]['snippet']['title']
-        self.video_count = channel['items'][0]['statistics']['videoCount']
-        self.url = "https://www.youtube.com/" + channel['items'][0]['snippet']['customUrl']
-        pprint(channel)
-        pprint(self.title)
-        pprint(self.video_count)
-        pprint(self.url)
+        self.sub_count = channel['items'][0]['statistics']['subscriberCount']
+        self.url = "https://www.youtube.com/channel/" + channel_id
 
-    @classmethod
-    def get_service(cls):
+
+
+    def get_service(self):
         """ Получение информации о сервисе"""
         api_key: str = os.getenv('API_KEY')
         youtube = build('youtube', 'v3', developerKey=api_key)
         return youtube
 
+    def __str__(self):
+        return f"{self.title}, ({self.url})"
 
-    def to_json(self, j_file):
-        data = {"channel_id": self.__channel_id,
-                "video_count": self.video_count,
-                "url": self.url}
-        with open(j_file, "w", encoding='utf-8') as file:
-            json.dump(data, file, indent=2, ensure_ascii=False)
+    def __add__(self, other):
+        return int(self.sub_count) + int(other.sub_count)
+        # print (moscowpython + highload)
+
+    def __sub__(self, other):
+        return int(self.sub_count) - int(other.sub_count)
+
+    def __gt__(self, other):
+        return int(self.sub_count) > int(other.sub_count)
+
+    def __ge__(self, other):
+        return int(self.sub_count) >= int(other.sub_count)
+
 
     @property
     def chanel_id(self):
         return self.__channel_id
 
-if __name__ == '__main__':
-    moscowpython = Channel('UC-OVMPlMA3-YCIeg4z5z23A')
-    moscowpython.to_json("Moscowpyton.json")
+
 
 
 
