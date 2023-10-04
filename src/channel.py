@@ -6,7 +6,6 @@ from googleapiclient.discovery import build
 import isodate
 
 
-
 api_key: str = os.getenv('API_KEY')
 
 

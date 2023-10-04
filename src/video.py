@@ -1,7 +1,6 @@
 import os
 from googleapiclient.discovery import build
 
-
 class Video:
     """ Инициализация класса Video """
 
